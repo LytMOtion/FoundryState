@@ -54,7 +54,7 @@
 
   /* hero */
   .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:7rem 1.5rem 5rem}
+    align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:6rem 1.5rem 11rem}
   .hero-bg{position:absolute;inset:0;background:url('fs-hero.jpg') center/cover no-repeat;
     transform:scale(1.08);will-change:transform}
   .hero-bg::after{content:'';position:absolute;inset:0;
@@ -64,7 +64,7 @@
     animation:rise 1.6s .35s var(--ease) forwards}
   .hero .eyebrow{margin-bottom:2.4rem;color:rgba(236,233,227,.6)}
   .hero h1{font-family:var(--serif);font-weight:200;font-size:clamp(2.9rem,9vw,7.2rem);
-    line-height:.98;letter-spacing:.14em;text-indent:.07em;text-transform:uppercase}
+    line-height:.98;letter-spacing:.14em;text-indent:0;text-transform:uppercase}
   .hero .thesis{margin:2.2rem auto 0;max-width:34ch;font-size:clamp(1.05rem,2.1vw,1.4rem);
     font-weight:300;color:rgba(236,233,227,.82);line-height:1.5}
   .hero .place{margin-top:2rem;color:var(--muted)}
@@ -177,7 +177,7 @@
   }
   @media(max-width:560px){
     .hero{padding-bottom:14rem}
-    .hero h1{font-size:clamp(1.65rem,8vw,2.5rem);letter-spacing:.04em;text-indent:.02em}
+    .hero h1{font-size:clamp(1.65rem,8vw,2.5rem);letter-spacing:.04em;text-indent:0}
   }
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;scroll-behavior:auto!important}
