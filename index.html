@@ -195,8 +195,9 @@
     /* Keep the widescreen ring intact in portrait, in the lower hero background. */
     .hero-media{inset:auto auto 4rem -10%;width:120%;height:auto;aspect-ratio:16/9;
       mask-image:linear-gradient(transparent,black 16%,black 84%,transparent)}
-    .hero-bg::after{background:linear-gradient(180deg,var(--bg),rgba(10,10,12,.88) 25%,
-      rgba(10,10,12,.25) 62%,rgba(10,10,12,.08) 80%,var(--bg))}
+    .hero-bg::after{background:linear-gradient(180deg,var(--bg),
+      rgba(10,10,12,.86) calc(15svh + 16.5rem),rgba(10,10,12,.08) calc(15svh + 22rem),
+      rgba(10,10,12,.08) 82%,var(--bg))}
     .hero-artwork{height:52svh;min-height:280px;max-height:520px}
   }
   @media(max-width:560px){
