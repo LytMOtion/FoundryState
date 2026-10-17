@@ -53,17 +53,22 @@
     font-family:var(--mono);font-size:.66rem;letter-spacing:.24em;text-transform:uppercase}
 
   /* hero */
-  .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:6rem 1.5rem 11rem}
+  .hero{--hero-copy-top:clamp(7.5rem,14svh,10rem);--hero-media-height:min(56.25vw,68svh);
+    position:relative;min-height:min(100svh,calc(var(--hero-copy-top) + var(--hero-media-height) + 6.5rem));
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;
+    overflow:hidden;padding:var(--hero-copy-top) 1.5rem 8rem}
   .hero-bg{position:absolute;inset:0;background:var(--bg);pointer-events:none}
-  .hero-media{position:absolute;left:50%;top:44%;width:min(100%,calc(100svh * 16 / 9));
-    height:auto;aspect-ratio:16/9;transform:translate(-50%,-50%);object-fit:contain;
-    object-position:center;mask-image:linear-gradient(transparent,black 12%,black 88%,transparent)}
+  .hero-media{position:absolute;left:50%;top:calc(var(--hero-copy-top) + 2rem);
+    width:calc(var(--hero-media-height) * 16 / 9);
+    height:auto;aspect-ratio:16/9;transform:translateX(-50%);object-fit:contain;
+    object-position:center;mask-image:linear-gradient(90deg,transparent,black 6%,black 94%,transparent),
+      linear-gradient(transparent,black 12%,black 88%,transparent);mask-composite:intersect}
   .hero-video{opacity:0;transition:opacity .8s ease}
   .hero-bg.is-playing .hero-video{opacity:1}
   .hero-bg::after{content:'';position:absolute;inset:0;
     background:linear-gradient(180deg,rgba(10,10,12,.75) 0%,rgba(10,10,12,.12) 25%,rgba(10,10,12,.12) 78%,var(--bg) 100%),
-      radial-gradient(ellipse at 50% 43%,rgba(10,10,12,.55),rgba(10,10,12,.25) 58%,transparent 82%)}
+      radial-gradient(ellipse at 50% calc(var(--hero-copy-top) + 7rem),rgba(10,10,12,.62),
+      rgba(10,10,12,.38) 58%,transparent 82%)}
   .hero-inner{text-shadow:0 2px 18px rgba(0,0,0,.6)}
   .hero-motion{position:absolute;right:clamp(1.5rem,5vw,4.5rem);bottom:2rem;z-index:3;
     background:rgba(10,10,12,.55);border:1px solid var(--line);padding:.6rem .8rem;color:var(--paper);
@@ -80,7 +85,7 @@
   .hero .eyebrow{margin-bottom:2.4rem;color:rgba(236,233,227,.8)}
   .hero h1{font-family:var(--serif);font-weight:200;font-size:clamp(2.9rem,9vw,7.2rem);
     line-height:.98;letter-spacing:.14em;text-indent:-0.9em;text-transform:uppercase;
-    transform:translateY(-0.15em)}            /* text-indent = LEFT (more negative = further left) · translateY = UP (more negative = higher) */
+    transform:translateY(-0.15em);text-shadow:0 2px 8px rgba(0,0,0,.75),0 0 28px rgba(0,0,0,.5)}
   .hero .thesis{margin:2.2rem auto 0;max-width:34ch;font-size:clamp(1.05rem,2.1vw,1.4rem);
     font-weight:300;color:rgba(236,233,227,.82);line-height:1.5}
   .hero .place{margin-top:2rem;color:rgba(236,233,227,.8)}
@@ -193,19 +198,26 @@
   }
   @media(max-width:760px){
     /* Size the hero to its ring and copy, so all following sections rise in normal flow. */
-    .hero{--hero-copy-top:17svh;min-height:min(100svh,calc(var(--hero-copy-top) + 67.5vw + 9rem));
+    .hero{--hero-copy-top:clamp(7rem,17svh,8rem);--hero-media-height:67.5vw;
+      min-height:min(100svh,calc(var(--hero-copy-top) + var(--hero-media-height) + 7.5rem));
       justify-content:flex-start;padding-top:var(--hero-copy-top);padding-bottom:8rem}
     /* Align the intact widescreen ring behind the heading and thesis in portrait. */
-    .hero-media{inset:calc(var(--hero-copy-top) + 1rem) auto auto -10%;width:120%;height:auto;transform:none;
+    .hero-media{inset:calc(var(--hero-copy-top) + 2.5rem) auto auto -10%;width:120%;height:auto;transform:none;
       mask-image:linear-gradient(transparent,black 16%,black 84%,transparent)}
     .hero-bg::after{background:linear-gradient(180deg,rgba(10,10,12,.7),rgba(10,10,12,.12) 30%,
-      rgba(10,10,12,.12) 65%,var(--bg)),radial-gradient(ellipse at 50% calc(var(--hero-copy-top) + 8rem),
-      rgba(10,10,12,.55),rgba(10,10,12,.3) 48%,transparent 75%)}
+      rgba(10,10,12,.12) 65%,var(--bg)),radial-gradient(ellipse at 50% calc(var(--hero-copy-top) + 7rem),
+      rgba(10,10,12,.62),rgba(10,10,12,.38) 48%,transparent 75%)}
     .hero-artwork{height:52svh;min-height:280px;max-height:520px}
   }
   @media(max-width:560px){
-    .hero{--hero-copy-top:15svh;padding-bottom:7rem}
+    .hero{--hero-copy-top:clamp(6.5rem,15svh,7rem);padding-bottom:7rem}
     .hero h1{font-size:clamp(1.65rem,8vw,2.5rem);letter-spacing:.04em;text-indent:0}
+  }
+  @media(max-width:760px) and (min-aspect-ratio:4/3){
+    .hero{--hero-media-height:min(67.5vw,68svh)}
+    .hero-media{left:50%;width:calc(var(--hero-media-height) * 16 / 9);transform:translateX(-50%);
+      mask-image:linear-gradient(90deg,transparent,black 12%,black 88%,transparent),
+        linear-gradient(transparent,black 16%,black 84%,transparent)}
   }
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;scroll-behavior:auto!important}
