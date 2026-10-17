@@ -192,7 +192,9 @@
     .menu-btn{display:block}
   }
   @media(max-width:760px){
-    .hero{--hero-copy-top:17svh;justify-content:flex-start;padding-top:var(--hero-copy-top);padding-bottom:8rem}
+    /* Size the hero to its ring and copy, so all following sections rise in normal flow. */
+    .hero{--hero-copy-top:17svh;min-height:min(100svh,calc(var(--hero-copy-top) + 67.5vw + 9rem));
+      justify-content:flex-start;padding-top:var(--hero-copy-top);padding-bottom:8rem}
     /* Align the intact widescreen ring behind the heading and thesis in portrait. */
     .hero-media{inset:calc(var(--hero-copy-top) + 1rem) auto auto -10%;width:120%;height:auto;transform:none;
       mask-image:linear-gradient(transparent,black 16%,black 84%,transparent)}
