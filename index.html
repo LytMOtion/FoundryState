@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="fs-hero.jpg">
+<link rel="preload" as="image" href="media/foundry-cinematic-v5-poster.jpg" fetchpriority="high">
 <style>
   :root{
     --bg:#0a0a0c; --bg2:#101014; --panel:#0d0d10;
@@ -55,20 +55,34 @@
   /* hero */
   .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;
     align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:6rem 1.5rem 11rem}
-  .hero-bg{position:absolute;inset:0;background:url('fs-hero.jpg') center/cover no-repeat;
-    transform:scale(1.08);will-change:transform}
+  .hero-bg{position:absolute;inset:0;background:var(--bg);pointer-events:none}
+  .hero-media{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+    object-position:center;mask-image:linear-gradient(transparent,black 12%,black 88%,transparent)}
+  .hero-video{opacity:0;transition:opacity .8s ease}
+  .hero-bg.is-playing .hero-video{opacity:1}
   .hero-bg::after{content:'';position:absolute;inset:0;
-    background:radial-gradient(120% 80% at 50% 42%,rgba(10,10,12,.35) 0%,rgba(10,10,12,.72) 60%,var(--bg) 100%),
-      linear-gradient(180deg,rgba(10,10,12,.9) 0%,transparent 26%,transparent 64%,var(--bg) 100%)}
+    background:linear-gradient(180deg,rgba(10,10,12,.75) 0%,rgba(10,10,12,.12) 25%,rgba(10,10,12,.12) 78%,var(--bg) 100%),
+      radial-gradient(ellipse at 50% 43%,rgba(10,10,12,.55),rgba(10,10,12,.25) 58%,transparent 82%)}
+  .hero-inner{text-shadow:0 2px 18px rgba(0,0,0,.6)}
+  .hero-motion{position:absolute;right:clamp(1.5rem,5vw,4.5rem);bottom:2rem;z-index:3;
+    background:rgba(10,10,12,.55);border:1px solid var(--line);padding:.6rem .8rem;color:var(--paper);
+    font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+  .hero-motion[hidden]{display:none}
+  .hero-motion:hover,.hero-motion:focus-visible{border-color:var(--paper)}
+  .hero-motion:focus-visible{outline:1px solid var(--paper);outline-offset:4px}
+  /* The original hero artwork now sits directly beneath the cinematic hero. */
+  .hero-artwork{height:clamp(280px,56vw,640px);overflow:hidden;background:var(--bg)}
+  .hero-artwork img{width:100%;height:100%;object-fit:cover;object-position:center 64%;display:block;
+    mask-image:linear-gradient(transparent,black 12%,black 88%,transparent)}
   .hero-inner{position:relative;z-index:3;max-width:880px;opacity:0;transform:translateY(16px);
     animation:rise 1.6s .35s var(--ease) forwards}
-  .hero .eyebrow{margin-bottom:2.4rem;color:rgba(236,233,227,.6)}
+  .hero .eyebrow{margin-bottom:2.4rem;color:rgba(236,233,227,.8)}
   .hero h1{font-family:var(--serif);font-weight:200;font-size:clamp(2.9rem,9vw,7.2rem);
     line-height:.98;letter-spacing:.14em;text-indent:-0.9em;text-transform:uppercase;
     transform:translateY(-0.15em)}            /* text-indent = LEFT (more negative = further left) · translateY = UP (more negative = higher) */
   .hero .thesis{margin:2.2rem auto 0;max-width:34ch;font-size:clamp(1.05rem,2.1vw,1.4rem);
     font-weight:300;color:rgba(236,233,227,.82);line-height:1.5}
-  .hero .place{margin-top:2rem;color:var(--muted)}
+  .hero .place{margin-top:2rem;color:rgba(236,233,227,.8)}
   .scroll-cue{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:3;
     font-family:var(--mono);font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);
     opacity:0;animation:fade 1s 1.8s forwards}
@@ -178,6 +192,12 @@
   }
   @media(max-width:760px){
     .hero{justify-content:flex-start;padding-top:17svh;padding-bottom:8rem}
+    /* Keep the widescreen ring intact in portrait, in the lower hero background. */
+    .hero-media{inset:auto auto 4rem -10%;width:120%;height:auto;aspect-ratio:16/9;
+      mask-image:linear-gradient(transparent,black 16%,black 84%,transparent)}
+    .hero-bg::after{background:linear-gradient(180deg,var(--bg),rgba(10,10,12,.88) 25%,
+      rgba(10,10,12,.25) 62%,rgba(10,10,12,.08) 80%,var(--bg))}
+    .hero-artwork{height:52svh;min-height:280px;max-height:520px}
   }
   @media(max-width:560px){
     .hero{padding-top:15svh;padding-bottom:7rem}
@@ -187,6 +207,8 @@
     *{animation:none!important;scroll-behavior:auto!important}
     .reveal{opacity:1;transform:none;transition:none}.hero-inner{opacity:1;transform:none;animation:none}
     .hero-bg,.forge-bg{transform:none!important}
+    .hero-video,.hero-motion{display:none}
+    .scroll-cue{opacity:1}
   }
 </style>
 </head>
@@ -211,7 +233,11 @@
 
 <!-- HERO -->
 <header class="hero" id="top">
-  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-bg" id="heroBg" aria-hidden="true">
+    <img class="hero-media" src="media/foundry-cinematic-v5-poster.jpg" alt="" width="1920" height="1080" fetchpriority="high">
+    <video class="hero-media hero-video" id="heroVideo" autoplay muted loop playsinline preload="none"
+      poster="media/foundry-cinematic-v5-poster.jpg" data-src="media/foundry-cinematic-v5.mp4" tabindex="-1"></video>
+  </div>
   <div class="hero-inner">
     <div class="label eyebrow">Operating Group · Est. Santa Barbara</div>
     <h1>FoundryState</h1>
@@ -219,7 +245,13 @@
     <div class="label place">Santa Barbara, California</div>
   </div>
   <div class="scroll-cue">Scroll</div>
+  <button class="hero-motion" id="heroMotion" type="button" aria-label="Pause background video" hidden>Pause</button>
 </header>
+
+<!-- ORIGINAL HERO ARTWORK -->
+<div class="hero-artwork" aria-hidden="true">
+  <img src="fs-hero.jpg" alt="" width="1344" height="768" loading="lazy" decoding="async">
+</div>
 
 <!-- STATEMENT -->
 <section class="statement pad" id="group">
@@ -376,17 +408,48 @@
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.16});
   Array.prototype.forEach.call(document.querySelectorAll('.reveal'),function(el){io.observe(el)});
 
-  // subtle parallax on hero + forge backgrounds
-  var hero=document.getElementById('heroBg'), forge=document.getElementById('forgeBg'),
+  // Load motion only when allowed; the supplied poster is the no-JS/error fallback.
+  var hero=document.getElementById('heroBg'), video=document.getElementById('heroVideo'),
+      motion=document.getElementById('heroMotion'), motionQuery=window.matchMedia('(prefers-reduced-motion:reduce)'),
+      userPaused=false, heroVisible=true, mediaFailed=false;
+  function syncPlayback(){
+    if(mediaFailed){video.pause();hero.classList.remove('is-playing');motion.hidden=true;return}
+    if(motionQuery.matches){
+      video.pause(); video.removeAttribute('src'); video.load();
+      hero.classList.remove('is-playing'); motion.hidden=true; return;
+    }
+    if(!video.getAttribute('src')) video.src=video.dataset.src;
+    motion.hidden=false;
+    if(userPaused || document.hidden || !heroVisible) video.pause();
+    else video.play().catch(function(){
+      motion.textContent='Play'; motion.setAttribute('aria-label','Play background video');
+    });
+  }
+  video.addEventListener('playing',function(){
+    hero.classList.add('is-playing'); motion.textContent='Pause';
+    motion.setAttribute('aria-label','Pause background video');
+  });
+  video.addEventListener('error',function(){mediaFailed=true;syncPlayback()});
+  motion.addEventListener('click',function(){
+    userPaused=!video.paused;
+    motion.textContent=userPaused?'Play':'Pause';
+    motion.setAttribute('aria-label',userPaused?'Play background video':'Pause background video');
+    syncPlayback();
+  });
+  motionQuery.addEventListener('change',syncPlayback);
+  document.addEventListener('visibilitychange',syncPlayback);
+  new IntersectionObserver(function(es){heroVisible=es[0].isIntersecting;syncPlayback()}).observe(hero.parentElement);
+  syncPlayback();
+
+  // Retain the existing forge parallax; the video framing remains stable.
+  var forge=document.getElementById('forgeBg'),
       forgeSec=forge?forge.parentElement:null;
-  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var reduce=motionQuery.matches;
   if(!reduce){
     var ticking=false;
     window.addEventListener('scroll',function(){
       if(ticking) return; ticking=true;
       requestAnimationFrame(function(){
-        var y=window.scrollY;
-        if(hero) hero.style.transform='scale(1.08) translateY('+(y*0.18)+'px)';
         if(forge && forgeSec){
           var r=forgeSec.getBoundingClientRect();
           forge.style.transform='translateY('+(r.top*-0.08)+'px) scale(1.06)';
